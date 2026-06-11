@@ -6,7 +6,7 @@ st.set_page_config(page_title="EDUSense-AI", layout="centered")
 # Header
 st.title("🧠 EDUSense-AI")
 st.caption("AI-Powered Student Misconception Diagnostic System (PSMDS)")
-st.write("Created by James Stewart")
+st.write("Created by Mr. Stewart")
 st.write("Powered by curiosity, the desire to learn, and the need for coffee ☕")
 
 st.markdown("---")

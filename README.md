@@ -5,6 +5,8 @@ EduSense AI is an education-focused AI system designed to help teachers:
 - Differentiate instruction
 - Detect student misconceptions
 - Generate worksheets, rubrics, and feedback
+- This AI also  was designed for students to help them understand the common errors in math
+
 
 The system prioritizes explainability, alignment to Regents/NGSS standards,
 and teacher-in-the-loop control.
@@ -31,7 +33,9 @@ Outputs:
   - Standards documents
   - Known misconception patterns
   - Rubrics
-- The teacher remains the final decision-maker
+- The teacher remains the final decision-maker 
+
+
 
 
 ## Demo Example

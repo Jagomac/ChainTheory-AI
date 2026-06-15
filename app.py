@@ -1,71 +1,34 @@
+
 import streamlit as st
 from EDUSense_engine import analyze
 
-# --------------------------------------------------
-# DESIGN NOTE (Phase 2 - Intent Inference)
-#
-# EDUSense is reasoning-first, not a calculator.
-# Student input may be an expression, an answer,
-# an explanation, or a mix of all three.
-#
-# Before analyzing misconceptions or correctness,
-# the system must infer student intent:
-#   - expression (working)
-#   - answer (asserting a result)
-#   - explanation (describing thinking)
-#
-# Symbol normalization (x, X, ×, (), adjacency)
-# happens BEFORE intent inference.
-#
-# Do NOT auto-compute expressions.
-# --------------------------------------------------
+st.set_page_config(page_title="EDUSense‑AI", layout="centered")
 
-st.set_page_config(page_title="EDUSense-AI", layout="centered")
-
-# ----------------------------
-# Helper: Normalize student math representations
-# ----------------------------
-def normalize_expression(text):
-    if not text:
-        return text
-
-    normalized = text
-
-    # Normalize multiplication symbols
-    normalized = normalized.replace("×", "*")
-    normalized = normalized.replace("X", "*")
-    normalized = normalized.replace("x", "*")
-
-    # Handle implicit multiplication
-    normalized = normalized.replace(") ", ")*")
-    normalized = normalized.replace(")(", ")*(")
-
-    return normalized
+st.title("EDUSense‑AI")
+st.subheader("Math Misconception Diagnostic System")
+st.caption("Powered by curiosity, the desire to learn, and the need for coffee ☕")
 
 
-# ----------------------------
-# Helper: Infer student intent
-# ----------------------------
-def infer_intent(text):
-    if not text:
-        return "unknown"
+expression = st.text_input(
+    "Math Expression",
+    value="10 - 2 × 4"
+)
 
-    lowered = text.lower()
+student_answer = st.text_input(
+    "Student Answer",
+    value="32"
+)
 
-    has_math_symbols = any(sym in text for sym in ["*", "+", "-", "/", "(", ")"])
-    has_equals = "=" in text
-    has_words = any(word in lowered for word in [
-        "i", "because", "then", "first", "next",
-        "thought", "did", "added", "multiplied"
-    ])
+student_work = st.text_area(
+    "Student Explanation",
+    value="I did 10 minus 2 first, then multiplied."
+)
 
-    if has_equals and has_math_symbols:
-        return "answer_assertion"
-    elif has_words and has_math_symbols:
-        return "mixed_reasoning"
-    elif has_words:
-        return "explanation"
-    elif has_math_symbols:
-        return "expression"
-    else:
-        return "unknown"
+if st.button("Analyze Student Thinking"):
+    results = analyze(expression, student_answer, student_work)
+
+    st.subheader("AI Analysis Output")
+
+    for i, r in enumerate(results, 1):
+        st.markdown(f"### Issue {i}")
+        st.json(r)

@@ -1,4 +1,3 @@
-
 import streamlit as st
 from EDUSense_engine import analyze
 
@@ -6,6 +5,7 @@ st.set_page_config(page_title="EDUSense‑AI", layout="centered")
 
 st.title("EDUSense‑AI")
 st.subheader("Math Misconception Diagnostic System")
+st.markdown("**Created by Mr. Stewart**")
 st.caption("Powered by curiosity, the desire to learn, and the need for coffee ☕")
 
 

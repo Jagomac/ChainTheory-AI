@@ -1,4 +1,4 @@
-# EDUSense-AI 
+# EDUSense-AI(name change possible) 
 
 EduSense AI is an education-focused AI system designed to help teachers:
 - Plan standards-aligned lessons

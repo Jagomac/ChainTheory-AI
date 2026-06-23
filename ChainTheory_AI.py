@@ -197,12 +197,9 @@ def analyze(expression, student_answer, student_work):
 
 if __name__ == "__main__":
 
-    print("\n=== EDUSense-AI Engine v1.0 ===")
+    print("\n===ChainTheory-AI v1.0 ===")
     print("Created by James Stewart")
-    
-    print("AI-Powered Student Misconception Diagnostic System")
-    print("AI-P.S.M.D.S")
-    
+    print("Diagnosing how students think, one step at a time")
     print("Powered by Curiosity, The desire to learn, And the need for coffee\n")
 
     expression = input("Enter the math expression: ")

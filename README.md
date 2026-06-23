@@ -1,8 +1,7 @@
-# EDUSense-AI
+ChainTheory-AI
 
-<EDUSense‑AI is an independent learning project and is not affiliated with any similarly named organizations.>
 
-EDUSense‑AI is an education-focused AI system designed to help teachers:
+ChainTheory-AI is an education-focused AI system designed to help teachers and teachers:
 
 - Plan standards-aligned lessons
 - Differentiate instruction

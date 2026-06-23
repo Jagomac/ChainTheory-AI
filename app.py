@@ -1,34 +1,37 @@
 import streamlit as st
-from EDUSense_engine import analyze
+from ChainTheory_AI import analyze
 
-st.set_page_config(page_title="EDUSense‑AI", layout="centered")
+# -----------------------------------
+# HEADER
+# -----------------------------------
+st.title("ChainTheory-AI")
+st.subheader("Diagnosing how students think, one step at a time")
+st.caption("Built by James Stewart")
 
-st.title("EDUSense‑AI")
-st.subheader("Math Misconception Diagnostic System")
-st.markdown("**Created by Mr. Stewart**")
-st.caption("Powered by curiosity, the desire to learn, and the need for coffee ☕")
+st.markdown("---")
 
+# -----------------------------------
+# INPUT SECTION
+# -----------------------------------
+st.write("### Student Input")
 
-expression = st.text_input(
-    "Math Expression",
-    value="10 - 2 × 4"
-)
+math_expression = st.text_input("Math Expression:")
 
-student_answer = st.text_input(
-    "Student Answer",
-    value="32"
-)
+student_answer = st.text_input("Student Answer:")
 
-student_work = st.text_area(
-    "Student Explanation",
-    value="I did 10 minus 2 first, then multiplied."
-)
+student_explanation = st.text_area("Student Explanation:")
 
+# -----------------------------------
+# ANALYZE BUTTON
+# -----------------------------------
 if st.button("Analyze Student Thinking"):
-    results = analyze(expression, student_answer, student_work)
+    if math_expression and student_answer and student_explanation:
+        
+        # You can later upgrade this logic
+        result = analyze(math_expression)
 
-    st.subheader("AI Analysis Output")
+        st.markdown("### Analysis Result")
+        st.success(result)
 
-    for i, r in enumerate(results, 1):
-        st.markdown(f"### Issue {i}")
-        st.json(r)
+    else:
+        st.warning("Please fill in all fields.")

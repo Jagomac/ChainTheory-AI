@@ -115,7 +115,7 @@ if mode == "Teacher Dashboard":
 # ---------------------------
 # MISCONCEPTION COUNTS
 # ---------------------------
-        misconception_counts = {}
+        misconception_counts > 0
 
         for entry in data:
 

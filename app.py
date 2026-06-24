@@ -1,76 +1,132 @@
 import streamlit as st
-from ChainTheory_AI import analyze 
+from ChainTheory_AI import analyze
 
+# -----------------------------------
+# PAGE CONFIG
+# -----------------------------------
 st.set_page_config(
     page_title="ChainTheory-AI",
     layout="centered"
 )
 
 # -----------------------------------
-# PAGE SETUP
+# SESSION STORAGE
 # -----------------------------------
-st.set_page_config(
-    page_title="ChainTheory-AI",
-    layout="centered"
-)
+if "class_data" not in st.session_state:
+    st.session_state.class_data = []
 
 # -----------------------------------
 # HEADER
 # -----------------------------------
 st.title("🧠 ChainTheory-AI 🧠")
-st.subheader("Anayzing student's thinking, Revealing the why behind the answer, one step at a time.")
-st.caption("Built by Mr.Stewart")
-st.markdown("Powered by by Curiosity, the desire to learn, and the need for coffee ☕")
+st.subheader("Understanding how students think — not just what they answer")
+st.caption("Built by Mr. Stewart")
+st.markdown("Powered by curiosity, a drive to learn, and a lot of coffee ☕")
 
-
-# -----------------------------------
-# INPUT SECTION
-# -----------------------------------
-st.write("### Student Input")
-
-math_expression = st.text_input("Math Expression:")
-student_answer = st.text_input("Student Answer:")
-student_explanation = st.text_area("Student Explanation:")
+st.markdown("---")
 
 # -----------------------------------
-# ANALYZE BUTTON
+# MODE SWITCH
 # -----------------------------------
-if st.button("Analyze Student's Thinking"):
+mode = st.radio("Select Mode", ["Student", "Teacher Dashboard"])
 
-    if math_expression and student_answer and student_explanation:
+# ===================================
+# STUDENT MODE
+# ===================================
+if mode == "Student":
 
-        # ✅ NONSENSE FILTER
-        nonsense_words = ["idk", "lol", "random", "???", "asdf", "bruh"]
+    st.markdown("## ✏️ Student Input")
 
-        if any(word in student_explanation.lower() for word in nonsense_words):
-            st.warning("⚠️ Try explaining your thinking more clearly so the AI can help you.")
-            st.stop()
+    math_expression = st.text_input("Math Expression:")
+    student_answer = st.text_input("Student Answer:")
+    student_explanation = st.text_area("Student Explanation:")
 
-        # ✅ SAFE ANALYZE BLOCK
-        try:
-            result = analyze(
-                math_expression,
-                student_answer,
-                student_explanation
-            )
+    if st.button("Analyze Student Thinking"):
 
-            # ✅ OUTPUT DISPLAY
-            if isinstance(result, list):
-                for issue in result:
-                    st.markdown("### ⚠️ Misconception Detected")
-                    st.write(f"**Issue:** {issue.get('misconception', '')}")
-                    st.write(f"**Student Feedback:** {issue.get('student_feedback', '')}")
-                    st.write(f"**Teacher Note:** {issue.get('teacher_note', '')}")
-                    st.markdown("---")
-            else:
-                st.markdown(result)
+        if math_expression and student_answer and student_explanation:
 
-        except Exception:
-            st.error("⚠️ Something went wrong. Try entering a valid math expression and explanation.")
+            # ✅ Nonsense filter
+            nonsense_words = ["idk", "lol", "random", "???", "asdf", "bruh"]
+
+            if any(word in student_explanation.lower() for word in nonsense_words):
+                st.warning("⚠️ Try explaining your thinking more clearly so the AI can help you.")
+                st.stop()
+
+            try:
+                result = analyze(
+                    math_expression,
+                    student_answer,
+                    student_explanation
+                )
+
+                st.success("✅ Analysis complete")
+
+                # ✅ Save to class data
+                st.session_state.class_data.append(result)
+
+                # ✅ Output
+                if isinstance(result, list):
+                    for issue in result:
+                        st.markdown("### ⚠️ Misconception")
+
+                        st.write(f"**Issue:** {issue.get('misconception', '')}")
+                        st.write(f"**Student Feedback:** {issue.get('student_feedback', '')}")
+                        st.write(f"**Teacher Note:** {issue.get('teacher_note', '')}")
+
+                        st.markdown("---")
+                else:
+                    st.markdown(result)
+
+            except Exception:
+                st.error("⚠️ Something went wrong. Try entering a valid math expression and explanation.")
+
+        else:
+            st.warning("Please fill in all fields.")
+
+
+# ===================================
+# TEACHER DASHBOARD
+# ===================================
+if mode == "Teacher Dashboard":
+
+    st.markdown("## 🧑‍🏫 Class Insight Dashboard")
+
+    data = st.session_state.class_data
+
+    if len(data) == 0:
+        st.info("No data yet. Run student analyses first.")
 
     else:
-        st.warning("Please fill in all fields.")
+        st.write(f"Total Attempts: {len(data)}")
 
+        # ---------------------------
+        # MISCONCEPTION COUNTS
+        # ---------------------------
+        misconception_counts = {}
 
+        for entry in data:
+            if isinstance(entry, list):
+                for issue in entry:
+                    m = issue.get("misconception", "Unknown")
+                    misconception_counts[m] = misconception_counts.get(m, 0) + 1
 
+        st.markdown("### 📊 Common Misconceptions")
 
+        for key, value in misconception_counts.items():
+            st.write(f"- {key} → {value}")
+
+        # ---------------------------
+        # INSIGHT PANEL
+        # ---------------------------
+        if len(misconception_counts) > 0:
+            most_common = max(misconception_counts, key=misconception_counts.get)
+
+            st.markdown("### 🧠 Insight")
+            st.write(f"Most common issue: **{most_common}**")
+
+    # ---------------------------
+    # RESET BUTTON
+    # ---------------------------
+    if st.button("Reset Class Data"):
+        st.session_state.class_data = []
+        st.success("Class data cleared")

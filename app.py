@@ -29,22 +29,22 @@ st.markdown("Powered by curiosity, a drive to learn, and a lot of coffee ☕")
 st.markdown("---")
 
 # -----------------------------------
-# ACCESS CONTROL
+# TOP CONTROL BAR (MODE + PASSWORD)
 # -----------------------------------
-st.markdown("### 🔐 Teacher Access")
+col1, col2 = st.columns([2, 1])
 
-password_input = st.text_input("Enter teacher password", type="password")
+with col2:
+    password_input = st.text_input("🔐 Teacher", type="password")
+    if password_input == "root":
+        st.session_state.authenticated = True
 
-if password_input == "root":
-    st.session_state.authenticated = True
-    st.success("✅ Teacher access granted")
+with col1:
+    if st.session_state.authenticated:
+        mode = st.radio("Mode", ["Student", "Teacher Dashboard"])
+    else:
+        mode = "Student"
 
-# Default mode
-mode = "Student"
-
-# Only show switch if authenticated
-if st.session_state.authenticated:
-    mode = st.radio("Select Mode", ["Student", "Teacher Dashboard"])
+st.markdown("---")
 
 # ===================================
 # STUDENT MODE
@@ -65,7 +65,7 @@ if mode == "Student":
             nonsense_words = ["idk", "lol", "random", "???", "asdf", "bruh"]
 
             if any(word in student_explanation.lower() for word in nonsense_words):
-                st.warning("⚠️ Try explaining your thinking more clearly so the AI can help you.")
+                st.warning("⚠️ Try explaining your thinking more clearly.")
                 st.stop()
 
             try:
@@ -77,28 +77,25 @@ if mode == "Student":
 
                 st.success("✅ Analysis complete")
 
-                # ✅ Save to dashboard
+                # ✅ Save to dashboard data
                 st.session_state.class_data.append(result)
 
                 # ✅ Output
                 if isinstance(result, list):
                     for issue in result:
                         st.markdown("### ⚠️ Misconception")
-
                         st.write(f"**Issue:** {issue.get('misconception', '')}")
                         st.write(f"**Student Feedback:** {issue.get('student_feedback', '')}")
                         st.write(f"**Teacher Note:** {issue.get('teacher_note', '')}")
-
                         st.markdown("---")
                 else:
                     st.markdown(result)
 
             except Exception:
-                st.error("⚠️ Something went wrong. Try entering a valid math expression and explanation.")
+                st.error("⚠️ Something went wrong. Try valid inputs.")
 
         else:
             st.warning("Please fill in all fields.")
-
 
 # ===================================
 # TEACHER DASHBOARD
@@ -115,42 +112,10 @@ if mode == "Teacher Dashboard":
     else:
         st.write(f"Total Attempts: {len(data)}")
 
-        # ---------------------------
-        # MISCONCEPTION COUNTS
-        # ---------------------------
+# ---------------------------
+# MISCONCEPTION COUNTS
+# ---------------------------
         misconception_counts = {}
 
         for entry in data:
-            if isinstance(entry, list):
-                for issue in entry:
-                    m = issue.get("misconception", "Unknown")
-                    misconception_counts[m] = misconception_counts.get(m, 0) + 1
 
-        st.markdown("### 📊 Common Misconceptions")
-
-        for key, value in misconception_counts.items():
-            st.write(f"- {key} → {value}")
-
-        # ---------------------------
-        # INSIGHT PANEL
-        # ---------------------------
-        if len(misconception_counts) > 0:
-            most_common = max(misconception_counts, key=misconception_counts.get)
-
-            st.markdown("### 🧠 Insight")
-            st.write(f"Most common issue: **{most_common}**")
-
-    # ---------------------------
-    # RESET + LOGOUT
-    # ---------------------------
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Reset Class Data"):
-            st.session_state.class_data = []
-            st.success("Class data cleared")
-
-    with col2:
-        if st.button("Log Out"):
-            st.session_state.authenticated = False
-            st.success("Logged out")

@@ -15,6 +15,9 @@ st.set_page_config(
 if "class_data" not in st.session_state:
     st.session_state.class_data = []
 
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
 # -----------------------------------
 # HEADER
 # -----------------------------------
@@ -26,9 +29,22 @@ st.markdown("Powered by curiosity, a drive to learn, and a lot of coffee ☕")
 st.markdown("---")
 
 # -----------------------------------
-# MODE SWITCH
+# ACCESS CONTROL
 # -----------------------------------
-mode = st.radio("Select Mode", ["Student", "Teacher Dashboard"])
+st.markdown("### 🔐 Teacher Access")
+
+password_input = st.text_input("Enter teacher password", type="password")
+
+if password_input == "root":
+    st.session_state.authenticated = True
+    st.success("✅ Teacher access granted")
+
+# Default mode
+mode = "Student"
+
+# Only show switch if authenticated
+if st.session_state.authenticated:
+    mode = st.radio("Select Mode", ["Student", "Teacher Dashboard"])
 
 # ===================================
 # STUDENT MODE
@@ -41,4 +57,100 @@ if mode == "Student":
     student_answer = st.text_input("Student Answer:")
     student_explanation = st.text_area("Student Explanation:")
 
+    if st.button("Analyze Student Thinking"):
 
+        if math_expression and student_answer and student_explanation:
+
+            # ✅ Nonsense filter
+            nonsense_words = ["idk", "lol", "random", "???", "asdf", "bruh"]
+
+            if any(word in student_explanation.lower() for word in nonsense_words):
+                st.warning("⚠️ Try explaining your thinking more clearly so the AI can help you.")
+                st.stop()
+
+            try:
+                result = analyze(
+                    math_expression,
+                    student_answer,
+                    student_explanation
+                )
+
+                st.success("✅ Analysis complete")
+
+                # ✅ Save to dashboard
+                st.session_state.class_data.append(result)
+
+                # ✅ Output
+                if isinstance(result, list):
+                    for issue in result:
+                        st.markdown("### ⚠️ Misconception")
+
+                        st.write(f"**Issue:** {issue.get('misconception', '')}")
+                        st.write(f"**Student Feedback:** {issue.get('student_feedback', '')}")
+                        st.write(f"**Teacher Note:** {issue.get('teacher_note', '')}")
+
+                        st.markdown("---")
+                else:
+                    st.markdown(result)
+
+            except Exception:
+                st.error("⚠️ Something went wrong. Try entering a valid math expression and explanation.")
+
+        else:
+            st.warning("Please fill in all fields.")
+
+
+# ===================================
+# TEACHER DASHBOARD
+# ===================================
+if mode == "Teacher Dashboard":
+
+    st.markdown("## 🧑‍🏫 Class Insight Dashboard")
+
+    data = st.session_state.class_data
+
+    if len(data) == 0:
+        st.info("No data yet. Run student analyses first.")
+
+    else:
+        st.write(f"Total Attempts: {len(data)}")
+
+        # ---------------------------
+        # MISCONCEPTION COUNTS
+        # ---------------------------
+        misconception_counts = {}
+
+        for entry in data:
+            if isinstance(entry, list):
+                for issue in entry:
+                    m = issue.get("misconception", "Unknown")
+                    misconception_counts[m] = misconception_counts.get(m, 0) + 1
+
+        st.markdown("### 📊 Common Misconceptions")
+
+        for key, value in misconception_counts.items():
+            st.write(f"- {key} → {value}")
+
+        # ---------------------------
+        # INSIGHT PANEL
+        # ---------------------------
+        if len(misconception_counts) > 0:
+            most_common = max(misconception_counts, key=misconception_counts.get)
+
+            st.markdown("### 🧠 Insight")
+            st.write(f"Most common issue: **{most_common}**")
+
+    # ---------------------------
+    # RESET + LOGOUT
+    # ---------------------------
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Reset Class Data"):
+            st.session_state.class_data = []
+            st.success("Class data cleared")
+
+    with col2:
+        if st.button("Log Out"):
+            st.session_state.authenticated = False
+            st.success("Logged out")

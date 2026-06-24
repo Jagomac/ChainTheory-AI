@@ -6,6 +6,22 @@ st.set_page_config(
     layout="centered"
 )
 
+# -----------------------------------
+# PAGE SETUP
+# -----------------------------------
+st.set_page_config(
+    page_title="ChainTheory-AI",
+    layout="centered"
+)
+
+# -----------------------------------
+# HEADER
+# -----------------------------------
+st.title("ChainTheory-AI")
+st.subheader("Diagnosing how students think, one step at a time")
+st.caption("Built by Mr.Stewart")
+st.markdown("Powered by by Curiosity, the desire to learn, and the need for coffee ☕ ")
+
 
 # -----------------------------------
 # INPUT SECTION
@@ -57,19 +73,4 @@ if st.button("Analyze Student Thinking"):
 
 
 
-# -----------------------------------
-# PAGE SETUP
-# -----------------------------------
-st.set_page_config(
-    page_title="ChainTheory-AI",
-    layout="centered"
-)
-
-# -----------------------------------
-# HEADER
-# -----------------------------------
-st.title("ChainTheory-AI")
-st.subheader("Diagnosing how students think, one step at a time")
-st.caption("Built by Mr.Stewart")
-st.markdown("Powered by by Curiosity, the desire to learn, and the need for coffee ☕ ")
 

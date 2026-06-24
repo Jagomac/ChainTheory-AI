@@ -97,6 +97,7 @@ if mode == "Student":
         else:
             st.warning("Please fill in all fields.")
 
+
 # ===================================
 # TEACHER DASHBOARD
 # ===================================
@@ -111,6 +112,41 @@ if mode == "Teacher Dashboard":
 
     else:
         st.write(f"Total Attempts: {len(data)}")
+
+        misconception_counts = {}
+
+        for entry in data:
+            if isinstance(entry, list):
+                for issue in entry:
+                    m = issue.get("misconception", "Unknown")
+                    misconception_counts[m] = misconception_counts.get(m, 0) + 1
+
+        st.markdown("### 📊 Common Misconceptions")
+
+        # ✅ ONLY VALID LOOP
+        for key, value in misconception_counts.items():
+            st.write(f"- {key} → {value}")
+
+        if len(misconception_counts) > 0:
+            most_common = max(misconception_counts, key=misconception_counts.get)
+
+            st.markdown("### 🧠 Insight")
+            st.write(f"Most common issue: **{most_common}**")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Reset Data"):
+            st.session_state.class_data = []
+            st.success("Class data cleared")
+
+    with col2:
+        if st.button("Log Out"):
+            st.session_state.authenticated = False
+            st.success("Logged out")
+
+
+
 
 # ---------------------------
 # MISCONCEPTION COUNTS

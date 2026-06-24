@@ -1,5 +1,9 @@
 import streamlit as st
-from ChainTheory_AI import analyze
+
+st.title("✅ ChainTheory-AI is alive")
+st.write("If you see this, Streamlit Cloud is working.")
+
+
 
 # -----------------------------------
 # PAGE SETUP

@@ -35,7 +35,7 @@ student_explanation = st.text_area("Student Explanation:")
 # -----------------------------------
 # ANALYZE BUTTON
 # -----------------------------------
-if st.button("Analyze Student Thinking"):
+if st.button("Analyze Student's Thinking"):
 
     if math_expression and student_answer and student_explanation:
 

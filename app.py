@@ -1,5 +1,5 @@
 import streamlit as st
-from ChainTheory_AI import analyze   ✅ THIS LINE
+from ChainTheory_AI import analyze 
 
 st.set_page_config(
     page_title="ChainTheory-AI",

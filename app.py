@@ -1,7 +1,8 @@
 import streamlit as st
 
-st.title("✅ ChainTheory-AI is alive")
-st.write("If you see this, Streamlit Cloud is working.")
+st.set_page_config(
+    page_title="ChainTheory-AI",
+    layout="centered"
 
 
 

@@ -17,7 +17,7 @@ st.set_page_config(
 # -----------------------------------
 # HEADER
 # -----------------------------------
-st.title("ChainTheory-AI")
+st.title("🧠ChainTheory-AI")
 st.subheader("Anayzing student's thinking, Revealing the why behind the answer, one step at a time.")
 st.caption("Built by Mr.Stewart")
 st.markdown("Powered by by Curiosity, the desire to learn, and the need for coffee ☕")

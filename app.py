@@ -24,7 +24,7 @@ if "authenticated" not in st.session_state:
 st.title("🧠 ChainTheory-AI 🧠")
 st.subheader("Understanding how students think — not just what they answer")
 st.caption("Built by Mr. Stewart")
-st.markdown("Powered by curiosity, the desire to learn, and need for coffee ☕")
+st.markdown("Powered by curiosity, the desire to learn, and the need for coffee ☕")
 
 st.markdown("---")
 

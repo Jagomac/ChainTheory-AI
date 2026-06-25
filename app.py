@@ -61,7 +61,6 @@ if mode == "Student":
 
         if math_expression and student_answer and student_explanation:
 
-            # ✅ Nonsense filter
             nonsense_words = ["idk", "lol", "random", "???", "asdf", "bruh"]
 
             if any(word in student_explanation.lower() for word in nonsense_words):
@@ -77,10 +76,10 @@ if mode == "Student":
 
                 st.success("✅ Analysis complete")
 
-                # ✅ Save to dashboard data
+                # Save data for dashboard
                 st.session_state.class_data.append(result)
 
-                # ✅ Output
+                # Output results
                 if isinstance(result, list):
                     for issue in result:
                         st.markdown("### ⚠️ Misconception")
@@ -92,11 +91,10 @@ if mode == "Student":
                     st.markdown(result)
 
             except Exception:
-                st.error("⚠️ Something went wrong. Try valid inputs.")
+                st.error("⚠️ Something went wrong. Try valid input.")
 
         else:
             st.warning("Please fill in all fields.")
-
 
 # ===================================
 # TEACHER DASHBOARD
@@ -113,6 +111,7 @@ if mode == "Teacher Dashboard":
     else:
         st.write(f"Total Attempts: {len(data)}")
 
+        # Count misconceptions
         misconception_counts = {}
 
         for entry in data:
@@ -123,16 +122,16 @@ if mode == "Teacher Dashboard":
 
         st.markdown("### 📊 Common Misconceptions")
 
-        # ✅ ONLY VALID LOOP
         for key, value in misconception_counts.items():
             st.write(f"- {key} → {value}")
 
+        # Insight
         if len(misconception_counts) > 0:
             most_common = max(misconception_counts, key=misconception_counts.get)
-
             st.markdown("### 🧠 Insight")
             st.write(f"Most common issue: **{most_common}**")
 
+    # Controls
     col1, col2 = st.columns(2)
 
     with col1:
@@ -144,14 +143,3 @@ if mode == "Teacher Dashboard":
         if st.button("Log Out"):
             st.session_state.authenticated = False
             st.success("Logged out")
-
-
-
-
-# ---------------------------
-# MISCONCEPTION COUNTS
-# ---------------------------
-        misconception_counts > 0
-
-        for entry in data:
-

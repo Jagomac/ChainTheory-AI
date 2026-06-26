@@ -61,12 +61,40 @@ if mode == "Student":
 
         if math_expression and student_answer and student_explanation:
 
-            nonsense_words = ["idk", "lol", "random", "???", "asdf", "bruh"]
+            # ✅ Extended behavior detection list
+            nonsense_words = [
+                "idk", "i dont know", "don't know",
+                "lol", "random", "???", "asdf", "bruh",
+                "just guessing", "guess", "i guessed", "no idea"
+            ]
 
-            if any(word in student_explanation.lower() for word in nonsense_words):
+            explanation_lower = student_explanation.lower()
+
+            # ✅ Behavior detection (NEW)
+            if any(word in explanation_lower for word in nonsense_words):
+
+                behavior_result = {
+                    "misconception": "Guessing / low effort response",
+                    "student_feedback": "Try explaining your thinking so the AI can help you better.",
+                    "teacher_note": "Student is not engaging in reasoning."
+                }
+
                 st.warning("⚠️ Try explaining your thinking more clearly.")
+
+                # ✅ Save behavior into dashboard
+                st.session_state.class_data.append([behavior_result])
+
+                # ✅ Show result like normal AI output
+                st.markdown("### ⚠️ Behavior Detected")
+                st.write(f"**Issue:** {behavior_result['misconception']}")
+                st.write(f"**Student Feedback:** {behavior_result['student_feedback']}")
+                st.write(f"**Teacher Note:** {behavior_result['teacher_note']}")
+
+                st.markdown("---")
+
                 st.stop()
 
+            # ✅ Normal AI analysis
             try:
                 result = analyze(
                     math_expression,
@@ -76,10 +104,10 @@ if mode == "Student":
 
                 st.success("✅ Analysis complete")
 
-                # Save data for dashboard
+                # ✅ Save data for dashboard
                 st.session_state.class_data.append(result)
 
-                # Output results
+                # ✅ Output results
                 if isinstance(result, list):
                     for issue in result:
                         st.markdown("### ⚠️ Misconception")
@@ -95,7 +123,6 @@ if mode == "Student":
 
         else:
             st.warning("Please fill in all fields.")
-
 # ===================================
 # TEACHER DASHBOARD
 # ===================================

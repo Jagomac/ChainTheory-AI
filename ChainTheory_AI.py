@@ -13,7 +13,7 @@ def safe_eval(expr):
 
 
 # ----------------------------------
-# UNIT 1 RULES
+# UNIT 1 CONCEPTS
 # ----------------------------------
 
 def rule_1_order(expression, student_work):
@@ -130,7 +130,7 @@ def rule_12_careless(student_work):
 
 
 # ----------------------------------
-# UNIT 2 RULES
+# UNIT 2 CONCEPTS
 # ----------------------------------
 
 def rule_13_compare_totals(expression, student_work):

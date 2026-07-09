@@ -13,6 +13,83 @@ def safe_eval(expr):
 
 
 # ----------------------------------
+# MATHEMATICAL REASONING VOCABULARY
+# ----------------------------------
+
+MATH_REASONING_TERMS = [
+
+    "add",
+    "added",
+    "plus",
+    "sum",
+
+    "subtract",
+    "subtracted",
+    "minus",
+
+    "multiply",
+    "multiplied",
+    "times",
+    "product",
+
+    "divide",
+    "divided",
+    "quotient",
+
+    "percent",
+    "decimal",
+    "fraction",
+    "ratio",
+
+    "equation",
+    "variable",
+
+    "whole",
+    "part",
+
+    "increase",
+    "decrease"
+
+]
+
+
+# ----------------------------------
+# STUDENT LANGUAGE LIBRARY
+# ----------------------------------
+
+STUDENT_LANGUAGE_TERMS = [
+
+    # Informal language
+    "idk",
+    "guess",
+    "maybe",
+    "i think",
+    
+    "i am not sure",
+    "not sure",
+    "unsure",
+
+    
+
+    # Brainrot / slang
+    "bro",
+    "bruh",
+    "ngl",
+    "fr",
+    "no cap",
+    "sus",
+    "cooked",
+    "bussin",
+    "ohio",
+    "lowkey",
+    "highkey",
+    "bet",
+    "cap",
+    "rizz",
+    "skibidi"
+    "Watch me cook"
+    "Let me cook"
+]# ----------------------------------
 # CONCEPT ANALYSIS FRAMEWORK
 # ----------------------------------
 
@@ -295,7 +372,200 @@ def concept_36_simple_interest(expression):
     return None
 
 
+
 # ----------------------------------
+# CONCEPT REGISTRIES
+# ----------------------------------
+
+UNIT_1_CONCEPTS = [
+
+    concept_1_order_of_operations,
+    concept_2_distributive_property,
+    concept_3_integer_signs,
+    concept_4_work_quality
+
+]
+
+UNIT_2_CONCEPTS = [
+
+    concept_13_ratio_comparison,
+    concept_14_unit_rates
+
+]
+
+UNIT_3_CONCEPTS = [
+
+    concept_25_percent_as_ratio,
+    concept_26_percent_to_decimal,
+    concept_27_percent_greater_than_100,
+    concept_28_percent_less_than_1,
+    concept_29_part_whole_relationship,
+    concept_30_percent_equation,
+    concept_31_percent_change,
+    concept_32_percent_error,
+    concept_33_markup,
+    concept_34_markdown,
+    concept_35_sales_tax,
+    concept_36_simple_interest
+
+]
+
+
+# ----------------------------------
+# UNIT DETECTION
+# ----------------------------------
+
+def determine_unit(expression):
+
+    text = expression.lower()
+
+    unit3_keywords = [
+        "%",
+        "percent",
+        "increase",
+        "decrease",
+        "markup",
+        "markdown",
+        "tax",
+        "interest",
+        "error"
+    ]
+
+    for keyword in unit3_keywords:
+        if keyword in text:
+            return 3
+
+    if "/" in expression:
+        return 2
+
+    return 1
+
+
+# ----------------------------------
+# ANALYZE ENGINE
+# ----------------------------------
+
+def analyze(expression, student_answer, student_work):
+
+    analysis = build_analysis()
+
+    unit = determine_unit(expression)
+
+    if unit == 1:
+        concepts = UNIT_1_CONCEPTS
+    elif unit == 2:
+        concepts = UNIT_2_CONCEPTS
+    else:
+        concepts = UNIT_3_CONCEPTS
+
+    for concept in concepts:
+
+        try:
+
+            params = concept.__code__.co_argcount
+
+            # Concepts that use only student_work
+            if params == 1:
+
+                if concept.__name__ in [
+                    "concept_4_work_quality",
+                    "concept_27_percent_greater_than_100",
+                    "concept_29_part_whole_relationship",
+                    "concept_30_percent_equation"
+                ]:
+                    result = concept(student_work)
+
+                else:
+                    result = concept(expression)
+
+            # Concepts using expression + student_work
+            elif params == 2:
+
+                result = concept(
+                    expression,
+                    student_work
+                )
+
+            # Concepts using expression + student_answer
+            else:
+
+                result = concept(
+                    expression,
+                    student_answer
+                )
+
+        except Exception:
+            continue
+
+        if result is None:
+            continue
+
+        status = result["status"]
+
+        if status == "strong":
+
+            analysis["strong_concepts"].append(
+                result["concept"]
+            )
+
+        elif status == "developing":
+
+            analysis["developing_concepts"].append(
+                result["concept"]
+            )
+
+        elif status == "needs_support":
+
+            analysis["needs_support"].append(
+                result["concept"]
+            )
+
+    # ------------------------------
+    # CHECK CORRECTNESS
+    # ------------------------------
+
+    correct = safe_eval(expression)
+
+    if correct is not None:
+
+        try:
+
+            if float(correct) == float(
+                student_answer.strip()
+            ):
+                analysis["correct"] = True
+
+        except:
+            pass
+
+    # ------------------------------
+    # FEEDBACK
+    # ------------------------------
+
+    if len(analysis["needs_support"]) == 0:
+
+        analysis["student_feedback"] = (
+            "Great job. Your explanation demonstrates conceptual understanding."
+        )
+
+        analysis["teacher_note"] = (
+            "Student demonstrates understanding."
+        )
+
+    else:
+
+        analysis["student_feedback"] = (
+            "Focus on strengthening these concepts: "
+            + ", ".join(
+                analysis["needs_support"]
+            )
+        )
+
+        analysis["teacher_note"] = (
+            "Concept gaps detected."
+        )
+
+    return analysis
 
 
 # ----------------------------------

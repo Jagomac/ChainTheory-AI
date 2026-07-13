@@ -1,5 +1,5 @@
 import streamlit as st
-from ChainTheory_AI import analyze
+from ChainTheory_AI_V3 import analyze
 
 # -----------------------------------
 # PAGE CONFIG

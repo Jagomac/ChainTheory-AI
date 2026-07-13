@@ -111,15 +111,29 @@ def build_analysis():
 
 def concept_1_order_of_operations(expression, student_work):
 
-    if any(op in expression for op in ["+", "-", "*", "/"]):
+    work = student_work.lower()
 
-        if any(word in student_work.lower()
-               for word in ["first", "then", "add"]):
+    keywords = [
 
-            return {
-                "concept": "Order of Operations",
-                "status": "developing"
-            }
+        "pemdas",
+        "order of operations",
+
+        "before multiplying",
+        "before dividing",
+
+        "multiply first",
+        "divide first",
+
+        "parentheses first"
+
+    ]
+
+    if any(keyword in work for keyword in keywords):
+
+        return {
+            "concept": "Order of Operations",
+            "status": "developing"
+        }
 
     return None
 

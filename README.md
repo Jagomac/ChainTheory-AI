@@ -1,3 +1,5 @@
+<img width="261" height="160" alt="Unknown" src="https://github.com/user-attachments/assets/d3908f92-9064-467b-b78b-38359018be63" />
+
 🧠 ChainTheory-AI v3.0 (Alpha)
 Understanding How Students Think — Not Just What They Answer
 
